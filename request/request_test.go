@@ -121,6 +121,7 @@ func TestRequestScrubExtraEdns0(t *testing.T) {
 		reply.Extra = append(reply.Extra, test.SRV(
 			fmt.Sprintf("large.example.com. 10 IN SRV 0 0 80 10-0-0-%d.default.pod.k8s.example.com.", i)))
 	}
+	req.SizeAndDo(reply)
 
 	_, got := req.Scrub(reply)
 	if want := ScrubExtra; want != got {
@@ -154,6 +155,7 @@ func TestRequestScrubExtraRegression(t *testing.T) {
 		reply.Extra = append(reply.Extra, test.A(
 			fmt.Sprintf("10-0-0-%d.default.pod.k8s.example.com. 10 IN A 10.0.0.%d", i, i)))
 	}
+	req.SizeAndDo(reply)
 
 	_, got := req.Scrub(reply)
 	if want := ScrubExtra; want != got {
