@@ -197,15 +197,15 @@ func (rule *substringNameRule) GetResponseRule() ResponseRule { return ResponseR
 // GetResponseRule return a rule to rewrite the response with.
 func (rule *regexNameRule) GetResponseRule() ResponseRule { return rule.ResponseRule }
 
-// validName returns true if s is valid domain name and shortern than 256 characters.
-func validName(s string) bool {
+// validName returns an error if s is valid domain name and shortern than 256 characters.
+func validName(s string) error {
 	_, ok := dns.IsDomainName(s)
 	if !ok {
-		return false
+		return fmt.Errorf("invalid domain name: %s", s)
 	}
-	if len(dns.Name(s).String()) > 255 {
-		return false
+	if x := len(dns.Name(s).String()); x > 255 {
+		return fmt.Errorf("name too long: %d > 255", x)
 	}
 
-	return true
+	return nil
 }

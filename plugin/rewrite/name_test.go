@@ -27,7 +27,7 @@ func TestRewriteIllegalName(t *testing.T) {
 
 	rec := dnstest.NewRecorder(&test.ResponseWriter{})
 	_, err := rw.ServeDNS(ctx, rec, m)
-	if !strings.Contains(err.Error(), "invalid name") {
+	if !strings.Contains(err.Error(), "invalid domain name") {
 		t.Errorf("Expected invalid name, got %s", err.Error())
 	}
 }
