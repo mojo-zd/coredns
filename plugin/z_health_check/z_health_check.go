@@ -47,12 +47,18 @@ func (z ZHealth) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg)
 
 	switch state.QType() {
 	case dns.TypePTR:
-
+		//names := z.LookupStaticAddr(dnsutil.ExtractAddressFromReverse(qname))
+		//if len(names) == 0 {
+		//	// If this doesn't match we need to fall through regardless of h.Fallthrough
+		//	return plugin.NextOrFailure(z.Name(), z.Next, ctx, w, r)
+		//}
+		//answers = z.ptr(qname, names)
 	case dns.TypeA:
-		ips := z.LookupStaticHostV4(qname)
+		ips := z.LookupStaticHostVx(qname, 4)
 		answers = a(qname, ips)
 	case dns.TypeAAAA:
-
+		ips := z.LookupStaticHostVx(qname, 6)
+		answers = a(qname, ips)
 	}
 
 	m := new(dns.Msg)
@@ -69,11 +75,14 @@ func (z ZHealth) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg)
 // Name implements the plugin.Handle interface.
 func (z ZHealth) Name() string { return "z_health_check" }
 
-func (z ZHealth) LookupStaticHostV4(qname string) (ips []net.IP) {
+func (z ZHealth) LookupStaticHostVx(qname string, version int) (ips []net.IP) {
 	for addr, values := range job.HealtherMap {
 		if plugin.Host(addr).Normalize() == qname {
 			for _, ip := range values {
-				ips = append(ips, parseLiteralIp(ip))
+				ver := ipVersion(ip)
+				if ver == version {
+					ips = append(ips, parseLiteralIp(ip))
+				}
 			}
 		}
 	}
@@ -111,4 +120,37 @@ func parseLiteralIp(addr string) net.IP {
 		addr = addr[0:i]
 	}
 	return net.ParseIP(addr)
+}
+
+// LookupStaticAddr ...
+func (z ZHealth) LookupStaticAddr(addr string) []string {
+	net.ParseIP(addr)
+	addr = parseLiteralIP(addr).String()
+	if addr == "" {
+		return nil
+	}
+
+	return nil
+}
+
+func parseLiteralIP(addr string) net.IP {
+	if i := strings.Index(addr, "%"); i >= 0 {
+		// discard ipv6 zone
+		addr = addr[0:i]
+	}
+
+	return net.ParseIP(addr)
+}
+
+// ipVersion returns what IP version was used textually
+func ipVersion(s string) int {
+	for i := 0; i < len(s); i++ {
+		switch s[i] {
+		case '.':
+			return 4
+		case ':':
+			return 6
+		}
+	}
+	return 0
 }

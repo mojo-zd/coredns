@@ -20,15 +20,7 @@ func setup(c *caddy.Controller) (err error) {
 	if err != nil {
 		return
 	}
-	//ticker := time.NewTicker(time.Second * 5)
-	//go func() {
-	//	for {
-	//		select {
-	//		case <-ticker.C:
-	//
-	//		}
-	//	}
-	//}()
+
 	for _, v := range loaded {
 		api := v.Api
 		if !strings.HasPrefix(api, "/") {
