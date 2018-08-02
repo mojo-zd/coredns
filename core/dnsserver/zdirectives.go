@@ -44,5 +44,6 @@ var Directives = []string{
 	"proxy",
 	"erratic",
 	"whoami",
+	"z_health_check",
 	"on",
 }
