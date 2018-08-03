@@ -1,7 +1,7 @@
 {
   "www.registry.com": {
-    "ips": ["10.0.0.110", "118.31.50.65"],
+    "ips": ["10.0.0.127"],
     "api": "i18n/lang/en-us-lang.json",
-    "timeout": 4
+    "protocol":"http://"
   }
 }

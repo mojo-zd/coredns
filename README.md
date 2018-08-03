@@ -172,6 +172,76 @@ grpc://example.org:1443 {
 
 When no transport protocol is specified the default `dns://` is assumed.
 
+With ZHealthCheck example.(z_health_check plugin for check backend service health status, and return the health addresses)
+~~~ txt
+.: {
+    z_health_check z_health.org
+    log
+}
+~~~
+
+create `z_health.org` file
+~~~ txt
+{
+  "www.registry.com": {
+    "ips": ["10.0.0.127"],
+    "api": "i18n/lang/en-us-lang.json",
+    "protocol":"http://"  //default is `http://`, not necessary
+  }
+}
+~~~
+
+validate:
+start coredns server `./coredns -dns.port=1053`
+
+if service of `10.0.0.127` not health, consule will output the request error info.
+
+~~~ txt
+dig -p 1053 @localhost www.registry.com
+
+
+; <<>> DiG 9.8.3-P1 <<>> -p 1053 @localhost www.registry.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 6145
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.registry.com.              IN      A
+
+;; Query time: 4 msec
+;; SERVER: ::1#1053(::1)
+;; WHEN: Fri Aug  3 10:50:06 2018
+;; MSG SIZE  rcvd: 34
+~~~
+
+if service is health
+~~~ txt
+dig -p 1053 @localhost www.registry.com
+
+
+; <<>> DiG 9.8.3-P1 <<>> -p 1053 @localhost www.registry.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22715
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;www.registry.com.              IN      A
+
+;; ANSWER SECTION:
+www.registry.com.       3600    IN      A       10.0.0.127
+
+;; Query time: 2 msec
+;; SERVER: 127.0.0.1#1053(127.0.0.1)
+;; WHEN: Fri Aug  3 11:00:56 2018
+;; MSG SIZE  rcvd: 66
+
+~~~
+
 ## Community
 
 We're most active on Slack (and Github):
