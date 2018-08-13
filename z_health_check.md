@@ -1,7 +1,7 @@
 ### 下载
 - download
 ```
-> wget -O coredns.zip http://files.git.oschina.net/group1/M00/04/8E/PaAvDFtr8OOAF3tGAM_sMUBaEEY516.zip?token=64e07c390dc9649c9bf58a46104c790e&ts=1534126364&attname=coredns-health.check.zip
+> wget -O coredns.zip http://files.git.oschina.net/group1/M00/04/96/PaAvDFtxDoiAT5_rAM_rm0oYy4I638.zip?token=551d67b379111f684bbe9a5df219b79f&ts=1534135954&attname=coredns_1.2.0.1_linux_amd64.zip
 ```
 
 - unzip
