@@ -174,8 +174,9 @@ When no transport protocol is specified the default `dns://` is assumed.
 
 With ZHealthCheck example.(z_health_check plugin for check backend service health status, and return the health addresses)
 ~~~ txt
-.: {
-    z_health_check z_health.org
+.:53 {
+    loadbalance round_robin
+    z_health_check /etc/coredns/z_health.org
     log
 }
 ~~~

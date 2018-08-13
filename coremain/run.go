@@ -19,7 +19,7 @@ import (
 )
 
 func init() {
-	caddy.DefaultConfigFile = "Corefile"
+	caddy.DefaultConfigFile = "/etc/coredns/Corefile"
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
 
