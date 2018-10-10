@@ -47,7 +47,7 @@ func (j HealthCheckJob) check() (r bool) {
 	response, err := httplib.NewHttpRestTemplate().Get(j.URL)
 	if err != nil || response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusBadRequest {
 		r = false
-		j.worker.stop <- j.URL
+		//j.worker.stop <- j.URL
 	}
 	return
 }
